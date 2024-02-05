@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: reminder-bot
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRESQL_URL}/${POSTGRESQL_DATABASE}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: PostgreSQL
+    show-sql: false
+telegram:
+  url: https://api.telegram.org
+  bot:
+    name: ${BOT_NAME}
+    token: ${BOT_TOKEN}
+    creator: ${BOT_CREATOR_ID}
+    db:
+      folder: ${BOT_DB_FOLDER}
+cron:
+  scheduler: 0 0/1 * * * *
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,loggers
+      base-path: "/"
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+      probes:
+        enabled: true
+      show-components: always
+      group:
+        startup:
+          include: "ping, telegramApiState"
+        liveness:
+          include: "livenessState, telegramApiState"
+        readiness:
+          include: "readinessState, telegramApiState"
+    loggers:
+      enabled: true
